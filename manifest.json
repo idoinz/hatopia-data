@@ -9,7 +9,9 @@
   ],
   "info": {
     "daily": [],
-    "weekly": [],
+    "weekly": [
+      "pink_bubbles.png"
+    ],
     "seasonal": [],
     "other": [
       "meteor.png"
