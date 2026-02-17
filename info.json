@@ -1,1 +1,21 @@
-{"daily":{"date":"2025-02-18","roamingOak":"LOT 5","flawlessFlouride":"LOT 12","notes":"test other notes","images":[]},"weekly":{"notes":"test weekly notes","images":[]},"seasonal":{"notes":"test seasonal notes","images":[]},"other":{"notes":"test other notes","images":[]}}
+{
+  "daily": {
+    "date": "2025-02-18",
+    "roamingOak": "🌳🌳",
+    "flawlessFlouride": "⛰️🗻",
+    "notes": "good morning",
+    "images": []
+  },
+  "weekly": {
+    "notes": "Check Winterfrost weekly quest",
+    "images": []
+  },
+  "seasonal": {
+    "notes": "Check fashionwave activity quest",
+    "images": []
+  },
+  "other": {
+    "notes": "Check weather for Rain/Metoer/Rainbow",
+    "images": []
+  }
+}
