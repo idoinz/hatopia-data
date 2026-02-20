@@ -2356,6 +2356,7 @@
     }
 
     initTabsAndFlowers();
+    loadInfoPanel();
 
     document.getElementById("send-discord")?.addEventListener("click", sendToDiscord);
     document.getElementById("export-tasks")?.addEventListener("click", exportTasks);
