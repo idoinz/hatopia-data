@@ -1,4 +1,4 @@
-// Hatopia v1.0.1 — bump version when changing this file
+// Hatopia v1.0.2 — bump version when changing this file
 (() => {
   const STORAGE_KEY = "hatopia_todos_v1";
   const SEA_ONLY_KEY = "hatopia_sea_only";
@@ -1561,10 +1561,12 @@
         uploadsTab.classList.remove("admin-only-tab");
         uploadsTab.hidden = false;
         uploadsTab.removeAttribute("hidden");
+        uploadsTab.style.display = "";
       } else {
         uploadsTab.classList.add("admin-only-tab");
         uploadsTab.hidden = true;
         uploadsTab.setAttribute("hidden", "hidden");
+        uploadsTab.style.display = "none";
       }
     }
     if (uploadsPanel) {
