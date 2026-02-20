@@ -817,7 +817,7 @@ input[type="text"]:focus {
 
 .todo-item {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto auto 1fr auto;
   align-items: center;
   gap: 10px;
   padding: 8px 10px;
@@ -827,6 +827,30 @@ input[type="text"]:focus {
   margin-bottom: 6px;
   transition: background-color var(--transition-fast), transform var(--transition-fast),
     box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.todo-drag-handle {
+  cursor: grab;
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.todo-drag-handle:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.todo-drag-handle:active {
+  cursor: grabbing;
+}
+
+.todo-item.todo-dragging {
+  opacity: 0.6;
+  cursor: grabbing;
 }
 
 .todo-item:hover {

@@ -56,9 +56,17 @@
     return b.createdAt - a.createdAt;
   }
 
+  /** Sort by explicit order first (user drag), then importance/type. */
+  function compareTasksWithOrder(a, b) {
+    const aOrd = typeof a.order === "number" ? a.order : 1e9;
+    const bOrd = typeof b.order === "number" ? b.order : 1e9;
+    if (aOrd !== bOrd) return aOrd - bOrd;
+    return compareTasksByImportanceAndType(a, b);
+  }
+
   /**
    * @typedef {{ id: string; text: string; completed: boolean }} SubTask
-   * @typedef {{ id: string; text: string; completed: boolean; createdAt: number; group: string; frequency: "daily" | "weekly" | "seasonal" | "other"; important?: boolean; subtasks: SubTask[] }} Todo
+   * @typedef {{ id: string; text: string; completed: boolean; createdAt: number; group: string; frequency: "daily" | "weekly" | "seasonal" | "other"; important?: boolean; order?: number; subtasks: SubTask[] }} Todo
    */
 
   /** @type {HTMLFormElement | null} */
@@ -578,6 +586,12 @@
       li.classList.add("todo-item--completed");
     }
 
+    const dragHandle = document.createElement("span");
+    dragHandle.className = "todo-drag-handle";
+    dragHandle.draggable = true;
+    dragHandle.setAttribute("aria-label", "Drag to reorder");
+    dragHandle.textContent = "⋮⋮";
+
     const check = document.createElement("button");
     check.type = "button";
     check.className = "todo-check";
@@ -741,6 +755,7 @@
     actions.appendChild(editBtn);
     actions.appendChild(deleteBtn);
 
+    li.appendChild(dragHandle);
     li.appendChild(check);
     li.appendChild(textContainer);
     li.appendChild(actions);
@@ -950,6 +965,28 @@
   }
 
   /**
+   * Reorder tasks within a group (pending or completed) by new order of todo ids.
+   * @param {string} groupId
+   * @param {boolean} completed
+   * @param {string[]} orderedIds
+   */
+  function reorderTodosInGroup(groupId, completed, orderedIds) {
+    if (!orderedIds.length) return;
+    const inGroup = (t) => (t.group || "SEA") === groupId && !!t.completed === completed;
+    const byId = new Map(todos.filter(inGroup).map((t) => [t.id, t]));
+    const reordered = orderedIds.map((id) => byId.get(id)).filter(Boolean);
+    if (reordered.length !== orderedIds.length) return;
+    const orderMap = new Map(reordered.map((t, i) => [t.id, i]));
+    todos = todos.map((t) => {
+      if (!inGroup(t)) return t;
+      const ord = orderMap.get(t.id);
+      return ord === undefined ? t : { ...t, order: ord };
+    });
+    saveToStorage();
+    renderTodos();
+  }
+
+  /**
    * Reorder sub-tasks for a todo by new order of sub-task ids.
    * @param {string} todoId
    * @param {string[]} orderedSubIds
@@ -991,7 +1028,7 @@
 
     incomplete
       .slice()
-      .sort(compareTasksByImportanceAndType)
+      .sort(compareTasksWithOrder)
       .forEach((todo) => {
         const groupId = todo.group || "SEA";
         const target = activeByGroup[groupId] || activeByGroup["SEA"];
@@ -1000,7 +1037,7 @@
 
     completed
       .slice()
-      .sort(compareTasksByImportanceAndType)
+      .sort(compareTasksWithOrder)
       .forEach((todo) => {
         const groupId = todo.group || "SEA";
         const target = completedByGroup[groupId] || completedByGroup["SEA"];
@@ -1582,6 +1619,50 @@
     }
   }
 
+  function initTodoDrag() {
+    const configs = [
+      [seaList, "SEA", false],
+      [asiaList, "ASIA", false],
+      [twList, "TW", false],
+      [seaListCompleted, "SEA", true],
+      [asiaListCompleted, "ASIA", true],
+      [twListCompleted, "TW", true],
+    ];
+    configs.forEach(([list, groupId, completed]) => {
+      if (!list) return;
+      list.addEventListener("dragstart", (e) => {
+        const handle = e.target.closest(".todo-drag-handle");
+        if (!handle) return;
+        const li = handle.closest(".todo-item");
+        if (!li) return;
+        e.dataTransfer.setData("text/plain", li.dataset.id || "");
+        e.dataTransfer.effectAllowed = "move";
+        li.classList.add("todo-dragging");
+      });
+      list.addEventListener("dragend", () => {
+        list.querySelectorAll(".todo-item.todo-dragging").forEach((el) => el.classList.remove("todo-dragging"));
+      });
+      list.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+      });
+      list.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const draggedId = e.dataTransfer.getData("text/plain");
+        if (!draggedId) return;
+        const dropLi = e.target.closest(".todo-item");
+        if (!dropLi || dropLi.dataset.id === draggedId) return;
+        const items = Array.from(list.querySelectorAll(".todo-item"));
+        const orderedIds = items.map((el) => el.dataset.id).filter(Boolean);
+        const insertIndex = orderedIds.indexOf(dropLi.dataset.id);
+        if (insertIndex === -1) return;
+        const without = orderedIds.filter((id) => id !== draggedId);
+        const newOrder = without.slice(0, insertIndex).concat(draggedId, without.slice(insertIndex));
+        reorderTodosInGroup(groupId, completed, newOrder);
+      });
+    });
+  }
+
   function initTabsAndFlowers() {
     const tabBtns = document.querySelectorAll(".tab-btn");
     const panelDashboard = document.getElementById("panel-dashboard");
@@ -1659,6 +1740,7 @@
     }
 
     initTabsAndFlowers();
+    initTodoDrag();
     loadInfoPanel();
 
     document.getElementById("send-discord")?.addEventListener("click", sendToDiscord);
