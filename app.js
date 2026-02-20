@@ -2255,8 +2255,28 @@
     const uploadsTab = document.getElementById("tab-uploads-btn");
     const uploadsPanel = document.getElementById("panel-uploads");
     const isAdmin = window.localStorage.getItem(ADMIN_KEY) === "1";
-    if (uploadsTab) uploadsTab.hidden = !isAdmin;
-    if (uploadsPanel && !isAdmin) uploadsPanel.hidden = true;
+    if (uploadsTab) {
+      if (isAdmin) {
+        uploadsTab.hidden = false;
+        uploadsTab.removeAttribute("hidden");
+        uploadsTab.style.display = "";
+      } else {
+        uploadsTab.hidden = true;
+        uploadsTab.setAttribute("hidden", "hidden");
+        uploadsTab.style.display = "none";
+      }
+    }
+    if (uploadsPanel) {
+      if (isAdmin) {
+        uploadsPanel.hidden = false;
+        uploadsPanel.removeAttribute("hidden");
+        uploadsPanel.style.display = "";
+      } else {
+        uploadsPanel.hidden = true;
+        uploadsPanel.setAttribute("hidden", "hidden");
+        uploadsPanel.style.display = "none";
+      }
+    }
   }
 
   function initTabsAndFlowers() {
@@ -2294,6 +2314,7 @@
   }
 
   function init() {
+    applyAdminTabVisibility();
     initFlowerLightbox();
     if (
       !form ||
@@ -2335,7 +2356,6 @@
     }
 
     initTabsAndFlowers();
-    applyAdminTabVisibility();
 
     document.getElementById("send-discord")?.addEventListener("click", sendToDiscord);
     document.getElementById("export-tasks")?.addEventListener("click", exportTasks);
