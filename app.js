@@ -1542,10 +1542,10 @@
 
   function applyAdminTabVisibility() {
     const uploadsTab = document.getElementById("tab-uploads-btn");
-    if (uploadsTab) {
-      const isAdmin = window.localStorage.getItem(ADMIN_KEY) === "1";
-      uploadsTab.hidden = !isAdmin;
-    }
+    const uploadsPanel = document.getElementById("panel-uploads");
+    const isAdmin = window.localStorage.getItem(ADMIN_KEY) === "1";
+    if (uploadsTab) uploadsTab.hidden = !isAdmin;
+    if (uploadsPanel && !isAdmin) uploadsPanel.hidden = true;
   }
 
   function initTabsAndFlowers() {
