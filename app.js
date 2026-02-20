@@ -104,9 +104,6 @@ window.HatopiaAppVersion = "1.0.3";
   const countAsiaEl = document.getElementById("todo-count-asia");
   const countTwEl = document.getElementById("todo-count-tw");
   /** @type {HTMLSelectElement | null} */
-  const resetFilterSelect = document.getElementById("reset-filter");
-  /** @type {HTMLButtonElement | null} */
-  const resetAllBtn = document.getElementById("reset-all");
 
   /** @type {Todo[]} */
   let todos = [];
@@ -270,6 +267,7 @@ window.HatopiaAppVersion = "1.0.3";
     renderDraftSubtasks();
     saveToStorage();
     renderTodos();
+    document.getElementById("add-task-dialog")?.close();
     input.focus();
   }
 
@@ -322,16 +320,21 @@ window.HatopiaAppVersion = "1.0.3";
     renderTodos();
   }
 
-  function resetAllToActive() {
+  /**
+   * Reset completed tasks to active. selectedTypes: array of "daily"|"weekly"|"seasonal"|"other", or "all".
+   * @param {string[] | "all"} selectedTypes
+   */
+  function resetAllToActive(selectedTypes) {
     const hasCompleted = todos.some((t) => t.completed);
     if (!hasCompleted) return;
-    const filter = resetFilterSelect ? resetFilterSelect.value : "all";
+    const types = selectedTypes === "all" || (Array.isArray(selectedTypes) && selectedTypes.length >= 4)
+      ? "all"
+      : Array.isArray(selectedTypes)
+        ? selectedTypes
+        : ["daily"];
     todos = todos.map((t) => {
       if (!t.completed) return t;
-      if (filter === "daily" && t.frequency !== "daily") return t;
-      if (filter === "weekly" && t.frequency !== "weekly") return t;
-      if (filter === "seasonal" && t.frequency !== "seasonal") return t;
-      if (filter === "other" && t.frequency !== "other") return t;
+      if (types !== "all" && !types.includes(t.frequency || "daily")) return t;
       return {
         ...t,
         completed: false,
@@ -1737,9 +1740,7 @@ window.HatopiaAppVersion = "1.0.3";
       !asiaList ||
       !twList ||
       !emptyState ||
-      !countEl ||
-      !resetFilterSelect ||
-      !resetAllBtn
+      !countEl
     ) {
       console.error("Hatopia To-Do: missing DOM elements.");
       return;
@@ -1793,7 +1794,65 @@ window.HatopiaAppVersion = "1.0.3";
     }
 
     form.addEventListener("submit", handleSubmit);
-    resetAllBtn.addEventListener("click", resetAllToActive);
+
+    const addTaskDialog = document.getElementById("add-task-dialog");
+    const btnAddTask = document.getElementById("btn-add-task");
+    if (btnAddTask && addTaskDialog) {
+      btnAddTask.addEventListener("click", () => {
+        addTaskDialog.showModal();
+        input?.focus();
+      });
+      document.getElementById("add-task-dialog-cancel")?.addEventListener("click", () => addTaskDialog.close());
+    }
+
+    const resetDialog = document.getElementById("reset-dialog");
+    const btnReset = document.getElementById("btn-reset");
+    const resetCheckAll = document.getElementById("reset-check-all");
+    const resetCheckDaily = document.getElementById("reset-check-daily");
+    const resetCheckWeekly = document.getElementById("reset-check-weekly");
+    const resetCheckSeasonal = document.getElementById("reset-check-seasonal");
+    const resetCheckOther = document.getElementById("reset-check-other");
+    const resetDialogConfirm = document.getElementById("reset-dialog-confirm");
+    const resetDialogCancel = document.getElementById("reset-dialog-cancel");
+    if (btnReset && resetDialog) {
+      btnReset.addEventListener("click", () => {
+        if (resetCheckDaily) resetCheckDaily.checked = true;
+        if (resetCheckWeekly) resetCheckWeekly.checked = false;
+        if (resetCheckSeasonal) resetCheckSeasonal.checked = false;
+        if (resetCheckOther) resetCheckOther.checked = false;
+        if (resetCheckAll) resetCheckAll.checked = false;
+        resetDialog.showModal();
+      });
+      if (resetCheckAll && resetCheckDaily && resetCheckWeekly && resetCheckSeasonal && resetCheckOther) {
+        resetCheckAll.addEventListener("change", () => {
+          const on = resetCheckAll.checked;
+          resetCheckDaily.checked = on;
+          resetCheckWeekly.checked = on;
+          resetCheckSeasonal.checked = on;
+          resetCheckOther.checked = on;
+        });
+        function syncResetAll() {
+          const all = resetCheckDaily.checked && resetCheckWeekly.checked && resetCheckSeasonal.checked && resetCheckOther.checked;
+          resetCheckAll.checked = all;
+        }
+        resetCheckDaily.addEventListener("change", syncResetAll);
+        resetCheckWeekly.addEventListener("change", syncResetAll);
+        resetCheckSeasonal.addEventListener("change", syncResetAll);
+        resetCheckOther.addEventListener("change", syncResetAll);
+      }
+      if (resetDialogConfirm) {
+        resetDialogConfirm.addEventListener("click", () => {
+          const types = [];
+          if (resetCheckDaily?.checked) types.push("daily");
+          if (resetCheckWeekly?.checked) types.push("weekly");
+          if (resetCheckSeasonal?.checked) types.push("seasonal");
+          if (resetCheckOther?.checked) types.push("other");
+          resetAllToActive(types.length === 4 ? "all" : types);
+          resetDialog.close();
+        });
+      }
+      if (resetDialogCancel) resetDialogCancel.addEventListener("click", () => resetDialog.close());
+    }
 
     document.addEventListener("click", (e) => {
       const groupToggle = e.target.closest(".group-toggle");

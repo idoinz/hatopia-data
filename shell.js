@@ -285,128 +285,15 @@ window.APP_SHELL_HTML = `
                     </section>
 
                     </div>
-                    <section class="card new-todo-card">
-                        <h2>Add a task</h2>
-                        <form
-                            id="todo-form"
-                            autocomplete="off"
-                            class="add-task-form"
-                        >
-                            <div class="add-task-form-left">
-                                <label class="field add-task-field">
-                                    <span class="task-label-row">
-                                        <span class="field-label">Task</span>
-                                        <label class="important-inline" for="todo-important">
-                                            <input type="checkbox" id="todo-important" aria-label="Mark as important" />
-                                            <span class="important-emoji" aria-hidden="true">‼️</span>
-                                        </label>
-                                    </span>
-                                    <input
-                                        id="todo-input"
-                                        type="text"
-                                        placeholder="What do you need to get done?"
-                                        required
-                                        maxlength="200"
-                                    />
-                                </label>
-                                <div class="subtask-form add-task-subtask">
-                                    <span class="field-label"
-                                        >Sub-tasks (optional)</span
-                                    >
-                                    <div class="subtask-form-row">
-                                        <input
-                                            id="new-subtask-input"
-                                            type="text"
-                                            placeholder="Add sub-task, press ➕"
-                                            maxlength="120"
-                                        />
-                                        <button
-                                            type="button"
-                                            id="add-subtask-draft"
-                                            class="icon-button subtask-add-draft"
-                                            aria-label="Add sub-task to new task"
-                                        >
-                                            ➕
-                                        </button>
-                                    </div>
-                                    <ul
-                                        id="subtask-draft-list"
-                                        class="subtask-list subtask-list--draft"
-                                    ></ul>
-                                </div>
-                            </div>
-                            <div class="add-task-form-right">
-                                <div class="add-task-form-row">
-                                    <label class="field type-field">
-                                        <span class="field-label">Type</span>
-                                        <select id="todo-type">
-                                            <option value="daily">Daily</option>
-                                            <option value="weekly">
-                                                Weekly
-                                            </option>
-                                            <option value="seasonal">
-                                                Seasonal
-                                            </option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                    </label>
-                                    <div id="form-group-field">
-                                        <label class="field group-field">
-                                            <span class="field-label"
-                                                >Group</span
-                                            >
-                                            <select id="todo-group">
-                                                <option value="SEA">
-                                                    🇵🇭 SEA
-                                                </option>
-                                                <option value="ASIA">
-                                                    🇰🇷 ASIA
-                                                </option>
-                                                <option value="TW">
-                                                    🇹🇼 TW
-                                                </option>
-                                                <option value="ALL" selected>
-                                                    All groups
-                                                </option>
-                                            </select>
-                                        </label>
-                                    </div>
-                                    <button type="submit" class="btn primary">
-                                        Add task
-                                    </button>
-                                </div>
-                                <div class="add-task-form-row">
-                                    <label class="field reset-field">
-                                        <span class="field-label">Reset</span>
-                                        <select id="reset-filter">
-                                            <option value="all">
-                                                All tasks
-                                            </option>
-                                            <option value="daily" selected>
-                                                Daily only
-                                            </option>
-                                            <option value="weekly">
-                                                Weekly only
-                                            </option>
-                                            <option value="seasonal">
-                                                Seasonal only
-                                            </option>
-                                            <option value="other">
-                                                Other only
-                                            </option>
-                                        </select>
-                                    </label>
-                                    <button
-                                        type="button"
-                                        id="reset-all"
-                                        class="btn secondary"
-                                        title="Reset completed tasks based on filter"
-                                    >
-                                        Reset
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                    <section class="add-reset-buttons">
+                        <button type="button" id="btn-add-task" class="btn-circle btn-circle--add" aria-label="Add task">
+                            <span class="btn-circle-icon">➕</span>
+                            <span class="btn-circle-label">Add Task</span>
+                        </button>
+                        <button type="button" id="btn-reset" class="btn-circle btn-circle--reset" aria-label="Reset completed tasks">
+                            <span class="btn-circle-icon">↩️</span>
+                            <span class="btn-circle-label">Reset</span>
+                        </button>
                     </section>
 
                     <p id="empty-state" class="empty-state">
@@ -695,6 +582,91 @@ window.APP_SHELL_HTML = `
                 <button type="button" id="import-dialog-confirm" class="btn">
                     Import
                 </button>
+            </div>
+        </dialog>
+
+        <dialog id="add-task-dialog" class="data-dialog add-task-dialog" aria-labelledby="add-task-dialog-title">
+            <h2 id="add-task-dialog-title">Add a task</h2>
+            <form id="todo-form" autocomplete="off" class="add-task-form add-task-form--dialog">
+                <div class="add-task-form-left">
+                    <label class="field add-task-field">
+                        <span class="task-label-row">
+                            <span class="field-label">Task</span>
+                            <label class="important-inline" for="todo-important">
+                                <input type="checkbox" id="todo-important" aria-label="Mark as important" />
+                                <span class="important-emoji" aria-hidden="true">‼️</span>
+                            </label>
+                        </span>
+                        <input id="todo-input" type="text" placeholder="What do you need to get done?" required maxlength="200" />
+                    </label>
+                    <div class="subtask-form add-task-subtask">
+                        <span class="field-label">Sub-tasks (optional)</span>
+                        <div class="subtask-form-row">
+                            <input id="new-subtask-input" type="text" placeholder="Add sub-task, press ➕" maxlength="120" />
+                            <button type="button" id="add-subtask-draft" class="icon-button subtask-add-draft" aria-label="Add sub-task to new task">➕</button>
+                        </div>
+                        <ul id="subtask-draft-list" class="subtask-list subtask-list--draft"></ul>
+                    </div>
+                </div>
+                <div class="add-task-form-right">
+                    <div class="add-task-form-row">
+                        <label class="field type-field">
+                            <span class="field-label">Type</span>
+                            <select id="todo-type">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="seasonal">Seasonal</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </label>
+                        <div id="form-group-field">
+                            <label class="field group-field">
+                                <span class="field-label">Group</span>
+                                <select id="todo-group">
+                                    <option value="SEA">🇵🇭 SEA</option>
+                                    <option value="ASIA">🇰🇷 ASIA</option>
+                                    <option value="TW">🇹🇼 TW</option>
+                                    <option value="ALL" selected>All groups</option>
+                                </select>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn primary">Add task</button>
+                    </div>
+                </div>
+            </form>
+            <div class="data-dialog-actions">
+                <button type="button" id="add-task-dialog-cancel" class="btn ghost">Cancel</button>
+            </div>
+        </dialog>
+
+        <dialog id="reset-dialog" class="data-dialog" aria-labelledby="reset-dialog-title">
+            <h2 id="reset-dialog-title">Reset completed tasks</h2>
+            <p class="data-dialog-desc">Select which types to reset to active:</p>
+            <div class="reset-dialog-checkboxes">
+                <label class="reset-dialog-row reset-dialog-row--all">
+                    <input type="checkbox" id="reset-check-all" aria-label="All types" />
+                    <span>All</span>
+                </label>
+                <label class="reset-dialog-row">
+                    <input type="checkbox" id="reset-check-daily" aria-label="Daily" />
+                    <span>Daily</span>
+                </label>
+                <label class="reset-dialog-row">
+                    <input type="checkbox" id="reset-check-weekly" aria-label="Weekly" />
+                    <span>Weekly</span>
+                </label>
+                <label class="reset-dialog-row">
+                    <input type="checkbox" id="reset-check-seasonal" aria-label="Seasonal" />
+                    <span>Seasonal</span>
+                </label>
+                <label class="reset-dialog-row">
+                    <input type="checkbox" id="reset-check-other" aria-label="Other" />
+                    <span>Other</span>
+                </label>
+            </div>
+            <div class="data-dialog-actions">
+                <button type="button" id="reset-dialog-cancel" class="btn ghost">Cancel</button>
+                <button type="button" id="reset-dialog-confirm" class="btn secondary">Reset</button>
             </div>
         </dialog>
 
