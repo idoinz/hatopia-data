@@ -1,4 +1,4 @@
-// Hatopia v1.0.3 — bump version when changing this file
+window.HatopiaAppVersion = "1.0.3";
 (() => {
   const STORAGE_KEY = "hatopia_todos_v1";
   const SEA_ONLY_KEY = "hatopia_sea_only";
@@ -1697,6 +1697,31 @@
     });
   }
 
+  function initVersionFootnote() {
+    let el = document.getElementById("hatopia-version-footnote");
+    let hideTimer = null;
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "hatopia-version-footnote";
+      el.className = "hatopia-version-footnote";
+      el.setAttribute("aria-live", "polite");
+      document.body.appendChild(el);
+    }
+    function show() {
+      const styleVer = getComputedStyle(document.documentElement).getPropertyValue("--hatopia-version").trim().replace(/^["']|["']$/g, "") || "—";
+      const appVer = window.HatopiaAppVersion || "—";
+      const shellVer = window.HatopiaShellVersion || "—";
+      el.textContent = `app ${appVer} · shell ${shellVer} · style ${styleVer}`;
+      el.classList.add("hatopia-version-footnote--visible");
+      if (hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => {
+        el.classList.remove("hatopia-version-footnote--visible");
+        hideTimer = null;
+      }, 2500);
+    }
+    document.addEventListener("dblclick", show, { passive: true });
+  }
+
   function init() {
     applyAdminTabVisibility();
     initFlowerLightbox();
@@ -1741,6 +1766,7 @@
 
     initTabsAndFlowers();
     initTodoDrag();
+    initVersionFootnote();
     loadInfoPanel();
 
     document.getElementById("send-discord")?.addEventListener("click", sendToDiscord);

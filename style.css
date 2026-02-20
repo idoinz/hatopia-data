@@ -1,6 +1,6 @@
-/* Hatopia v1.0.1 — bump version when changing this file */
 /* Light theme (pink) - default */
 :root {
+  --hatopia-version: "1.0.1";
   --bg: #fdf2f8;
   --bg-elevated: #fce7ef;
   --bg-elevated-soft: #fbcfe8;
@@ -2046,5 +2046,22 @@ html[data-theme="light"] .tab-btn:hover {
 }
 .app-loading-text {
   font-size: 0.95rem;
+}
+
+/* Version footnote: double-click anywhere to show briefly */
+.hatopia-version-footnote {
+  position: fixed;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: var(--text-muted);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 9999;
+}
+.hatopia-version-footnote.hatopia-version-footnote--visible {
+  opacity: 0.85;
 }
 

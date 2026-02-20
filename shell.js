@@ -1,4 +1,4 @@
-// Hatopia v1.0.0 — bump version when changing this file
+window.HatopiaShellVersion = "1.0.0";
 window.APP_SHELL_HTML = `
         <div class="app-shell">
             <div class="sticky-top">
