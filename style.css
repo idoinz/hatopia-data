@@ -1267,6 +1267,11 @@ html[data-theme="dark"] .theme-toggle-thumb {
   flex: 0 0 auto;
 }
 
+/* Uploads tab: hidden by default; only shown when admin (JS removes this class) */
+.tab-btn.admin-only-tab {
+  display: none !important;
+}
+
 .tab-btn {
   display: inline-flex;
   align-items: center;

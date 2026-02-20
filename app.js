@@ -59,7 +59,7 @@
                             <span class="tab-icon" aria-hidden="true">🐰</span>
                             <span class="tab-label">Animals</span>
                         </button>
-                        <button type="button" class="tab-btn" role="tab" id="tab-uploads-btn" aria-selected="false" aria-controls="panel-uploads" data-panel="uploads" hidden>
+                        <button type="button" class="tab-btn admin-only-tab" role="tab" id="tab-uploads-btn" aria-selected="false" aria-controls="panel-uploads" data-panel="uploads" hidden>
                             <span class="tab-icon" aria-hidden="true">📲</span>
                             <span class="tab-label">Uploads</span>
                         </button>
@@ -2257,13 +2257,13 @@
     const isAdmin = window.localStorage.getItem(ADMIN_KEY) === "1";
     if (uploadsTab) {
       if (isAdmin) {
+        uploadsTab.classList.remove("admin-only-tab");
         uploadsTab.hidden = false;
         uploadsTab.removeAttribute("hidden");
-        uploadsTab.style.display = "";
       } else {
+        uploadsTab.classList.add("admin-only-tab");
         uploadsTab.hidden = true;
         uploadsTab.setAttribute("hidden", "hidden");
-        uploadsTab.style.display = "none";
       }
     }
     if (uploadsPanel) {
