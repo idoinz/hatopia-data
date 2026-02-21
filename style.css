@@ -1,6 +1,6 @@
 /* Light theme (pink) - default */
 :root {
-  --hatopia-version: "1.0.2";
+  --hatopia-version: "1.0.3";
   --bg: #fdf2f8;
   --bg-elevated: #fce7ef;
   --bg-elevated-soft: #fbcfe8;
@@ -44,15 +44,15 @@
   --dialog-backdrop: rgba(253, 242, 248, 0.85);
   --badge-daily-color: #b91c1c;
   --badge-weekly-color: #15803d;
-  --badge-seasonal-color: #be185d;
+  --badge-seasonal-color: #b45309;
   --badge-other-color: #475569;
-  /* Category highlight (task row): left border + subtle bg */
+  /* Category highlight (task row): right border + subtle bg */
   --category-daily-border: #db2777;
   --category-daily-bg: rgba(219, 39, 119, 0.06);
   --category-weekly-border: #059669;
   --category-weekly-bg: rgba(5, 150, 105, 0.06);
-  --category-seasonal-border: #be185d;
-  --category-seasonal-bg: rgba(190, 24, 93, 0.06);
+  --category-seasonal-border: #d97706;
+  --category-seasonal-bg: rgba(217, 119, 6, 0.06);
   --category-other-border: #64748b;
   --category-other-bg: rgba(100, 116, 139, 0.06);
   --btn-export-bg: linear-gradient(135deg, #3b82f6, #06b6d4);
@@ -111,14 +111,14 @@ html[data-theme="dark"] {
   --dialog-backdrop: rgba(5, 8, 22, 0.75);
   --badge-daily-color: #f87171;
   --badge-weekly-color: #34d399;
-  --badge-seasonal-color: #f472b6;
+  --badge-seasonal-color: #fbbf24;
   --badge-other-color: #94a3b8;
   --category-daily-border: #a78bfa;
   --category-daily-bg: rgba(124, 92, 255, 0.08);
   --category-weekly-border: #34d399;
   --category-weekly-bg: rgba(52, 211, 153, 0.08);
-  --category-seasonal-border: #f472b6;
-  --category-seasonal-bg: rgba(244, 114, 182, 0.08);
+  --category-seasonal-border: #f59e0b;
+  --category-seasonal-bg: rgba(245, 158, 11, 0.08);
   --category-other-border: #94a3b8;
   --category-other-bg: rgba(148, 163, 184, 0.08);
   --btn-export-bg: linear-gradient(135deg, #60a5fa, #22d3ee);
@@ -344,12 +344,13 @@ textarea,
   font-size: 18px;
 }
 
-/* Add Task + Reset circular buttons */
+/* Add Task + Reset circular buttons (right-aligned, pure circle look) */
 .add-reset-buttons {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: flex-end;
+  gap: 14px;
   padding: 12px 0;
 }
 
@@ -361,22 +362,27 @@ textarea,
   gap: 4px;
   border: none;
   border-radius: 50%;
+  outline: none;
   cursor: pointer;
   font: inherit;
   font-weight: 600;
   color: var(--btn-primary-text);
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  box-shadow: 0 10px 24px rgba(124, 92, 255, 0.4);
+  box-shadow: 0 0 0 0 rgba(124, 92, 255, 0.2), 0 4px 14px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-circle:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(124, 92, 255, 0.5);
+  box-shadow: 0 0 24px rgba(124, 92, 255, 0.35), 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
 .btn-circle:active {
   transform: translateY(0);
+}
+
+.btn-circle:focus-visible {
+  box-shadow: 0 0 0 3px var(--focus-ring), 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
 .btn-circle--add {
@@ -395,7 +401,11 @@ textarea,
   height: 28px;
   font-size: 8px;
   background: linear-gradient(135deg, #ff7aa8, #ffb86c);
-  box-shadow: 0 6px 14px rgba(255, 122, 168, 0.4);
+  box-shadow: 0 0 0 0 rgba(255, 122, 168, 0.2), 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.btn-circle--reset:hover {
+  box-shadow: 0 0 18px rgba(255, 122, 168, 0.35), 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .btn-circle--reset .btn-circle-icon {
@@ -416,6 +426,22 @@ textarea,
   .btn-circle--reset .btn-circle-icon {
     font-size: 14px;
   }
+}
+
+html[data-theme="dark"] .btn-circle {
+  box-shadow: 0 0 0 0 rgba(124, 92, 255, 0.15), 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+html[data-theme="dark"] .btn-circle:hover {
+  box-shadow: 0 0 28px rgba(124, 92, 255, 0.4), 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="dark"] .btn-circle--reset {
+  box-shadow: 0 0 0 0 rgba(255, 122, 168, 0.15), 0 3px 12px rgba(0, 0, 0, 0.4);
+}
+
+html[data-theme="dark"] .btn-circle--reset:hover {
+  box-shadow: 0 0 20px rgba(255, 122, 168, 0.35), 0 4px 14px rgba(0, 0, 0, 0.5);
 }
 
 /* Add Task dialog form layout */
@@ -995,35 +1021,35 @@ input[type="text"]:focus {
   color: var(--todo-item-completed-text);
 }
 
-/* Category highlight: left border + subtle tint overlay */
+/* Category highlight: right border + subtle tint overlay */
 .todo-item.todo-item--daily {
-  border-left: 3px solid var(--category-daily-border);
-  background: linear-gradient(90deg, var(--category-daily-bg) 0%, transparent 22%), var(--todo-item-bg);
+  border-right: 3px solid var(--category-daily-border);
+  background: linear-gradient(270deg, var(--category-daily-bg) 0%, transparent 22%), var(--todo-item-bg);
 }
 .todo-item.todo-item--weekly {
-  border-left: 3px solid var(--category-weekly-border);
-  background: linear-gradient(90deg, var(--category-weekly-bg) 0%, transparent 22%), var(--todo-item-bg);
+  border-right: 3px solid var(--category-weekly-border);
+  background: linear-gradient(270deg, var(--category-weekly-bg) 0%, transparent 22%), var(--todo-item-bg);
 }
 .todo-item.todo-item--seasonal {
-  border-left: 3px solid var(--category-seasonal-border);
-  background: linear-gradient(90deg, var(--category-seasonal-bg) 0%, transparent 22%), var(--todo-item-bg);
+  border-right: 3px solid var(--category-seasonal-border);
+  background: linear-gradient(270deg, var(--category-seasonal-bg) 0%, transparent 22%), var(--todo-item-bg);
 }
 .todo-item.todo-item--other {
-  border-left: 3px solid var(--category-other-border);
-  background: linear-gradient(90deg, var(--category-other-bg) 0%, transparent 22%), var(--todo-item-bg);
+  border-right: 3px solid var(--category-other-border);
+  background: linear-gradient(270deg, var(--category-other-bg) 0%, transparent 22%), var(--todo-item-bg);
 }
 
 .todo-item--completed.todo-item--daily {
-  background: linear-gradient(90deg, var(--category-daily-bg) 0%, transparent 22%), var(--todo-item-completed-bg);
+  background: linear-gradient(270deg, var(--category-daily-bg) 0%, transparent 22%), var(--todo-item-completed-bg);
 }
 .todo-item--completed.todo-item--weekly {
-  background: linear-gradient(90deg, var(--category-weekly-bg) 0%, transparent 22%), var(--todo-item-completed-bg);
+  background: linear-gradient(270deg, var(--category-weekly-bg) 0%, transparent 22%), var(--todo-item-completed-bg);
 }
 .todo-item--completed.todo-item--seasonal {
-  background: linear-gradient(90deg, var(--category-seasonal-bg) 0%, transparent 22%), var(--todo-item-completed-bg);
+  background: linear-gradient(270deg, var(--category-seasonal-bg) 0%, transparent 22%), var(--todo-item-completed-bg);
 }
 .todo-item--completed.todo-item--other {
-  background: linear-gradient(90deg, var(--category-other-bg) 0%, transparent 22%), var(--todo-item-completed-bg);
+  background: linear-gradient(270deg, var(--category-other-bg) 0%, transparent 22%), var(--todo-item-completed-bg);
 }
 
 .todo-check {
@@ -1083,7 +1109,7 @@ input[type="text"]:focus {
 }
 
 .todo-type-badge--seasonal {
-  background: rgba(236, 72, 153, 0.18);
+  background: rgba(217, 119, 6, 0.15);
   color: var(--badge-seasonal-color);
 }
 
@@ -1096,7 +1122,7 @@ html[data-theme="dark"] .todo-type-badge--weekly {
   background: rgba(52, 211, 153, 0.15);
 }
 html[data-theme="dark"] .todo-type-badge--seasonal {
-  background: rgba(244, 114, 182, 0.15);
+  background: rgba(245, 158, 11, 0.18);
 }
 html[data-theme="dark"] .todo-type-badge--other {
   background: rgba(148, 163, 184, 0.15);
