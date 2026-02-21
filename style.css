@@ -1,6 +1,6 @@
 /* Light theme (pink) - default */
 :root {
-  --hatopia-version: "1.0.1";
+  --hatopia-version: "1.0.2";
   --bg: #fdf2f8;
   --bg-elevated: #fce7ef;
   --bg-elevated-soft: #fbcfe8;
@@ -42,9 +42,19 @@
   --brand-mark-bg: radial-gradient(circle at 20% 0, #fff, #fce7ef);
   --brand-mark-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
   --dialog-backdrop: rgba(253, 242, 248, 0.85);
+  --badge-daily-color: #b91c1c;
   --badge-weekly-color: #15803d;
   --badge-seasonal-color: #be185d;
-  --badge-other-color: #4b5563;
+  --badge-other-color: #475569;
+  /* Category highlight (task row): left border + subtle bg */
+  --category-daily-border: #db2777;
+  --category-daily-bg: rgba(219, 39, 119, 0.06);
+  --category-weekly-border: #059669;
+  --category-weekly-bg: rgba(5, 150, 105, 0.06);
+  --category-seasonal-border: #be185d;
+  --category-seasonal-bg: rgba(190, 24, 93, 0.06);
+  --category-other-border: #64748b;
+  --category-other-bg: rgba(100, 116, 139, 0.06);
   --btn-export-bg: linear-gradient(135deg, #3b82f6, #06b6d4);
   --btn-export-shadow: 0 14px 32px rgba(59, 130, 246, 0.5);
   --btn-export-shadow-hover: 0 18px 40px rgba(59, 130, 246, 0.65);
@@ -99,9 +109,18 @@ html[data-theme="dark"] {
   --brand-mark-bg: radial-gradient(circle at 20% 0, #ffffff, #d0c3ff);
   --brand-mark-shadow: 0 10px 24px rgba(0, 0, 0, 0.65);
   --dialog-backdrop: rgba(5, 8, 22, 0.75);
-  --badge-weekly-color: #4ade80;
+  --badge-daily-color: #f87171;
+  --badge-weekly-color: #34d399;
   --badge-seasonal-color: #f472b6;
-  --badge-other-color: #9ca3af;
+  --badge-other-color: #94a3b8;
+  --category-daily-border: #a78bfa;
+  --category-daily-bg: rgba(124, 92, 255, 0.08);
+  --category-weekly-border: #34d399;
+  --category-weekly-bg: rgba(52, 211, 153, 0.08);
+  --category-seasonal-border: #f472b6;
+  --category-seasonal-bg: rgba(244, 114, 182, 0.08);
+  --category-other-border: #94a3b8;
+  --category-other-bg: rgba(148, 163, 184, 0.08);
   --btn-export-bg: linear-gradient(135deg, #60a5fa, #22d3ee);
   --btn-export-shadow: 0 14px 32px rgba(96, 165, 250, 0.5);
   --btn-export-shadow-hover: 0 18px 40px rgba(96, 165, 250, 0.65);
@@ -976,6 +995,37 @@ input[type="text"]:focus {
   color: var(--todo-item-completed-text);
 }
 
+/* Category highlight: left border + subtle tint overlay */
+.todo-item.todo-item--daily {
+  border-left: 3px solid var(--category-daily-border);
+  background: linear-gradient(90deg, var(--category-daily-bg) 0%, transparent 22%), var(--todo-item-bg);
+}
+.todo-item.todo-item--weekly {
+  border-left: 3px solid var(--category-weekly-border);
+  background: linear-gradient(90deg, var(--category-weekly-bg) 0%, transparent 22%), var(--todo-item-bg);
+}
+.todo-item.todo-item--seasonal {
+  border-left: 3px solid var(--category-seasonal-border);
+  background: linear-gradient(90deg, var(--category-seasonal-bg) 0%, transparent 22%), var(--todo-item-bg);
+}
+.todo-item.todo-item--other {
+  border-left: 3px solid var(--category-other-border);
+  background: linear-gradient(90deg, var(--category-other-bg) 0%, transparent 22%), var(--todo-item-bg);
+}
+
+.todo-item--completed.todo-item--daily {
+  background: linear-gradient(90deg, var(--category-daily-bg) 0%, transparent 22%), var(--todo-item-completed-bg);
+}
+.todo-item--completed.todo-item--weekly {
+  background: linear-gradient(90deg, var(--category-weekly-bg) 0%, transparent 22%), var(--todo-item-completed-bg);
+}
+.todo-item--completed.todo-item--seasonal {
+  background: linear-gradient(90deg, var(--category-seasonal-bg) 0%, transparent 22%), var(--todo-item-completed-bg);
+}
+.todo-item--completed.todo-item--other {
+  background: linear-gradient(90deg, var(--category-other-bg) 0%, transparent 22%), var(--todo-item-completed-bg);
+}
+
 .todo-check {
   width: 20px;
   height: 20px;
@@ -1017,28 +1067,39 @@ input[type="text"]:focus {
   align-items: center;
   justify-content: center;
   margin-left: 8px;
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   background: var(--accent-soft);
-  color: var(--accent-strong);
+  color: var(--badge-daily-color);
 }
 
 .todo-type-badge--weekly {
-  background: rgba(34, 197, 94, 0.22);
+  background: rgba(34, 197, 94, 0.18);
   color: var(--badge-weekly-color);
 }
 
 .todo-type-badge--seasonal {
-  background: rgba(236, 72, 153, 0.22);
+  background: rgba(236, 72, 153, 0.18);
   color: var(--badge-seasonal-color);
 }
 
 .todo-type-badge--other {
-  background: rgba(156, 163, 175, 0.25);
+  background: rgba(100, 116, 139, 0.18);
   color: var(--badge-other-color);
+}
+
+html[data-theme="dark"] .todo-type-badge--weekly {
+  background: rgba(52, 211, 153, 0.15);
+}
+html[data-theme="dark"] .todo-type-badge--seasonal {
+  background: rgba(244, 114, 182, 0.15);
+}
+html[data-theme="dark"] .todo-type-badge--other {
+  background: rgba(148, 163, 184, 0.15);
 }
 
 .todo-type-badge--important {

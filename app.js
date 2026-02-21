@@ -1,4 +1,4 @@
-window.HatopiaAppVersion = "1.0.3";
+window.HatopiaAppVersion = "1.0.4";
 (() => {
   const STORAGE_KEY = "hatopia_todos_v1";
   const SEA_ONLY_KEY = "hatopia_sea_only";
@@ -583,7 +583,8 @@ window.HatopiaAppVersion = "1.0.3";
    */
   function createTodoElement(todo) {
     const li = document.createElement("li");
-    li.className = "todo-item";
+    const freq = todo.frequency || "daily";
+    li.className = "todo-item todo-item--" + freq;
     li.dataset.id = todo.id;
     if (todo.completed) {
       li.classList.add("todo-item--completed");
@@ -611,7 +612,6 @@ window.HatopiaAppVersion = "1.0.3";
     textContainer.textContent = todo.text;
 
     const typeBadge = document.createElement("span");
-    const freq = todo.frequency || "daily";
     typeBadge.className =
       freq === "weekly"
         ? "todo-type-badge todo-type-badge--weekly"
