@@ -39,5 +39,9 @@
         "name": "Ferret",
         "foods": ["🐠 Goby", "🐟 Sea Bass", "🥚 Egg"]
     },
-    { "emoji": "🐧", "name": "Penguin", "foods": ["🐟 ??", "🐟 ??", "🐟 ??"] }
+    {
+        "emoji": "🐧",
+        "name": "Penguin",
+        "foods": ["🐟 Sardine", "🦐 Common Prawn", "🐟 False Scad"]
+    }
 ]
